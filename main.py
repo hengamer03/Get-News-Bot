@@ -31,12 +31,15 @@ def fetch_news_articles(query):
         }
         response = requests.get(API)
         response.raise_for_status()
-        data = response.json()["articles"]
-        print(data)
+        data = response.json().get("articles", [])
+        if not data:
+            print("No articles found")
+            return []
     except Exception as e:
         print(f"Error fetching news articles: {e}")
-        return None
-    return data
+        return []
+
+    return data[:5]
 
 prompt = PromptTemplate(
     input_variables=["user_query"],
@@ -50,7 +53,13 @@ user_query = input("Please enter the topic you want news about: ")
 def summarize_articles(articles):
     summaries = []
     for article in articles:
-        summary = llm.summarize(article["content"])
+        content = article.get("content") or article.get("description") or "No content available"
+        if len(content) > 1000:
+            content = content[:1000]
+        
+        prompt = f"Can you summarize the article: {content}"
+        summary = llm.invoke(prompt)
+        #summary = llm.summarize(article["content"])
         summaries.append({
             "title": article["title"],
             "summary": summary,
