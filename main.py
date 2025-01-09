@@ -14,7 +14,7 @@ llm_json_mode = ChatOllama(model=local_llm, temperature=0, format="json")
 
 # Schibsted News Archive API endpoint and API key
 SCHIBSTED_API_ENDPOINT = "https://newsapi.org/v2/everything?"
-API_KEY = "0c1f283e6ad4b12b97e1c16a93cdda6"
+API_KEY = "API_KEY"
 
 def fetch_news_articles(query):
     headers = {
